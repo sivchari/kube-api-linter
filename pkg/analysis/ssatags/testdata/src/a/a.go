@@ -230,7 +230,33 @@ type SSATagsTestSpec struct {
 	// +listType=map
 	// +listMapKey=name
 	ObjectWithNamedEmbeddedStruct []ObjectWithNamedEmbedded `json:"objectWithNamedEmbeddedStruct,omitempty"` // want "SSATagsTestSpec.ObjectWithNamedEmbeddedStruct listMapKey \"name\" does not exist as a field in the struct"
+
+	// Slice-of-slice element - should warn
+	// +listType=set
+	SetOfStringSlices [][]string `json:"setOfStringSlices,omitempty"` // want "SSATagsTestSpec.SetOfStringSlices with listType=set is not recommended due to Server-Side Apply compatibility issues. Consider using listType=atomic or listType=map instead"
+
+	// Pointer-to-slice element - should warn
+	// +listType=set
+	SetOfPointerStringSlices []*[]string `json:"setOfPointerStringSlices,omitempty"` // want "SSATagsTestSpec.SetOfPointerStringSlices with listType=set is not recommended due to Server-Side Apply compatibility issues. Consider using listType=atomic or listType=map instead"
+
+	// Named slice element - should warn
+	// +listType=set
+	SetOfNamedSlices []StringArray `json:"setOfNamedSlices,omitempty"` // want "SSATagsTestSpec.SetOfNamedSlices with listType=set is not recommended due to Server-Side Apply compatibility issues. Consider using listType=atomic or listType=map instead"
+
+	// Named slice-of-slice at field position - should warn
+	// +listType=set
+	SetOfNamedSliceOfSlice StringArrayOfArrays `json:"setOfNamedSliceOfSlice,omitempty"` // want "SSATagsTestSpec.SetOfNamedSliceOfSlice with listType=set is not recommended due to Server-Side Apply compatibility issues. Consider using listType=atomic or listType=map instead"
+
+	// External-package scalar alias - should pass
+	// +listType=set
+	SetOfOtherPackageStringAlias []aa.OtherPackageStringAlias `json:"setOfOtherPackageStringAlias,omitempty"`
+
+	// External-package struct - should warn
+	// +listType=set
+	SetOfOtherPackageObject []aa.OtherPackageObject `json:"setOfOtherPackageObject,omitempty"` // want "SSATagsTestSpec.SetOfOtherPackageObject with listType=set is not recommended due to Server-Side Apply compatibility issues. Consider using listType=atomic or listType=map instead"
 }
+
+type StringArrayOfArrays [][]string
 
 // JSONSchemaProps is a placeholder for the JSON schema properties.
 type JSONSchemaProps struct{}
